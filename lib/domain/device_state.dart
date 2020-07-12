@@ -19,6 +19,7 @@ class DeviceState {
 }
 
 enum BluetoothState {
+  unknown,
   noPermissions,
   off,
   on,
