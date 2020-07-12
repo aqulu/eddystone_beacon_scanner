@@ -32,4 +32,14 @@ class EddystoneUid {
   })  : assert(frameType == 0),
         assert(namespace.length == 20),
         assert(instance.length == 12);
+
+  @override
+  int get hashCode => namespace.hashCode ^ instance.hashCode;
+
+  @override
+  bool operator ==(other) =>
+      identical(this, other) ||
+      other is EddystoneUid &&
+          namespace == other.namespace &&
+          instance == other.instance;
 }

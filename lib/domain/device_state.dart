@@ -16,6 +16,16 @@ class DeviceState {
       bluetoothState == BluetoothState.on &&
       [LocationServicesState.notRequired, LocationServicesState.on]
           .contains(locationServicesState);
+
+  @override
+  int get hashCode => bluetoothState.hashCode ^ locationServicesState.hashCode;
+
+  @override
+  bool operator ==(other) =>
+      identical(this, other) ||
+      other is DeviceState &&
+          bluetoothState == other.bluetoothState &&
+          locationServicesState == other.locationServicesState;
 }
 
 enum BluetoothState {
