@@ -20,7 +20,10 @@ class LocationServicesStateStream extends StreamView<LocationServicesState> {
     Duration interval = const Duration(seconds: 3),
   }) {
     final stream = Stream.periodic(interval).asyncMap(
-      (_) => requestLocationServicesState(Permission.locationWhenInUse),
+      (_) => requestLocationServicesState(
+        () => Permission.locationWhenInUse.status,
+        () => Permission.locationWhenInUse.serviceStatus,
+      ),
     );
     return LocationServicesStateStream._(stream);
   }
@@ -32,9 +35,10 @@ class LocationServicesStateStream extends StreamView<LocationServicesState> {
 ///
 @visibleForTesting
 Future<LocationServicesState> requestLocationServicesState(
-  PermissionWithService locationWhenInUsePermission,
+  PermissionStatusRequestBuilder permissionStatusRequestBuilder,
+  ServiceStatusRequestBuilder serviceStatusRequestBuilder,
 ) async {
-  final permission = await locationWhenInUsePermission.status;
+  final permission = await permissionStatusRequestBuilder();
 
   switch (permission) {
     case PermissionStatus.undetermined:
@@ -44,7 +48,7 @@ Future<LocationServicesState> requestLocationServicesState(
     case PermissionStatus.permanentlyDenied:
       return LocationServicesState.permissionPermanentlyDenied;
     case PermissionStatus.granted:
-      return await locationWhenInUsePermission.serviceStatus.then(
+      return await serviceStatusRequestBuilder().then(
         (serviceStatus) => (serviceStatus == ServiceStatus.enabled)
             ? LocationServicesState.on
             : LocationServicesState.off,
@@ -54,3 +58,6 @@ Future<LocationServicesState> requestLocationServicesState(
       throw PlatformException(code: 'android_only');
   }
 }
+
+typedef PermissionStatusRequestBuilder = Future<PermissionStatus> Function();
+typedef ServiceStatusRequestBuilder = Future<ServiceStatus> Function();
