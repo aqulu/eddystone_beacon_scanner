@@ -41,5 +41,8 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Eddystone Beacon Scanner would like to use bluetooth to scan nearby BLE beacons</string>
+
 </dict>
 </plist>
