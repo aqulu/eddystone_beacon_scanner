@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:eddystone_beacon_scanner/domain/device_state.dart';
 import 'package:flutter/foundation.dart';
@@ -8,6 +9,10 @@ import 'package:permission_handler/permission_handler.dart';
 class LocationServicesStateStream extends StreamView<LocationServicesState> {
   const LocationServicesStateStream._(Stream<LocationServicesState> stream)
       : super(stream);
+
+  factory LocationServicesStateStream.forPlatform() => (Platform.isIOS)
+      ? LocationServicesStateStream.ios()
+      : LocationServicesStateStream.android();
 
   /// ios devices do not need location services for BLE scanning;
   /// avoid invoking platform-interfaces that would require location permissions
