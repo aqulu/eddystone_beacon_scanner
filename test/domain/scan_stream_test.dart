@@ -53,7 +53,7 @@ void main() {
 
     expectLater(
       ScanStream.from(
-        Stream.fromIterable(states),
+        states.asStreamWithDelay(),
         Stream.value(LocationServicesState.on),
         scanner,
       ),
@@ -77,9 +77,9 @@ void main() {
     () async {
       when(scanner.scan()).thenAnswer((_) => Stream.fromIterable(_scanResults));
 
-      expectLater(
+      expect(
         ScanStream.from(
-          Stream.fromIterable([BluetoothState.off, BluetoothState.on]),
+          [BluetoothState.off, BluetoothState.on].asStreamWithDelay(),
           Stream.value(LocationServicesState.on),
           scanner,
         ),
@@ -138,6 +138,26 @@ void main() {
       );
     },
   );
+}
+
+/// stream helper, where every event is delayed by 100ms to ensure sequential
+/// processing of combineLatest
+
+extension _DelayedStreamExtension<T> on List<T> {
+  Stream<T> asStreamWithDelay<T>({
+    Duration delayPerItem = const Duration(milliseconds: 100),
+  }) {
+    final list = List.from(this);
+    return Stream.fromFutures(
+      List.generate(
+        list.length,
+        (index) => Future.delayed(
+          delayPerItem * index,
+          () => list[index],
+        ),
+      ),
+    );
+  }
 }
 
 const _scanResults = [

@@ -26,6 +26,12 @@ class DeviceState {
       other is DeviceState &&
           bluetoothState == other.bluetoothState &&
           locationServicesState == other.locationServicesState;
+
+  @override
+  String toString() => "DeviceState(\n"
+      "\tbluetoothState: $bluetoothState,\n"
+      "\tlocationServicesState: $locationServicesState\n"
+      ")";
 }
 
 enum BluetoothState {
