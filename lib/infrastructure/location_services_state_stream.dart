@@ -16,11 +16,11 @@ class LocationServicesStateStream extends StreamView<LocationServicesState> {
         Stream.value(LocationServicesState.notRequired),
       );
 
-  factory LocationServicesStateStream.android(
-    PermissionWithService locationWhenInUsePermission,
-  ) {
-    final stream = Stream.periodic(Duration(seconds: 3)).asyncMap(
-      (_) => requestLocationServicesState(locationWhenInUsePermission),
+  factory LocationServicesStateStream.android({
+    Duration interval = const Duration(seconds: 3),
+  }) {
+    final stream = Stream.periodic(interval).asyncMap(
+      (_) => requestLocationServicesState(Permission.locationWhenInUse),
     );
     return LocationServicesStateStream._(stream);
   }
