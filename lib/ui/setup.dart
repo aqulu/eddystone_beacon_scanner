@@ -1,5 +1,5 @@
 import 'package:eddystone_beacon_scanner/domain/device_state.dart';
-import 'package:eddystone_beacon_scanner/domain/device_state_stream.dart';
+import 'package:eddystone_beacon_scanner/domain/scan_stream.dart';
 import 'package:eddystone_beacon_scanner/infrastructure/bluetooth_state_stream.dart';
 import 'package:eddystone_beacon_scanner/infrastructure/location_services_state_stream.dart';
 import 'package:flutter/material.dart';
@@ -13,9 +13,7 @@ class Setup extends StatelessWidget {
             providers: [
               StreamProvider(
                 create: (context) => DeviceStateStream.from(
-                  BluetoothStateStream(
-                    Provider.of(context, listen: false),
-                  ),
+                  BluetoothStateStream(Provider.of(context, listen: false)),
                   LocationServicesStateStream.forPlatform(),
                 ),
                 initialData: DeviceState(
