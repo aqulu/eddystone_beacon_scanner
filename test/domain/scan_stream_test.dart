@@ -25,8 +25,14 @@ void main() {
 
     expectLater(
       ScanStream.from(
-        Stream.value(BluetoothState.on),
-        Stream.fromIterable(states),
+        Stream.fromIterable(
+          states.map(
+            (it) => DeviceState(
+              locationServicesState: it,
+              bluetoothState: BluetoothState.on,
+            ),
+          ),
+        ),
         scanner,
       ),
       emitsInOrder(
@@ -53,8 +59,14 @@ void main() {
 
     expectLater(
       ScanStream.from(
-        states.asStreamWithDelay(),
-        Stream.value(LocationServicesState.on),
+        Stream.fromIterable(
+          states.map(
+            (it) => DeviceState(
+              locationServicesState: LocationServicesState.on,
+              bluetoothState: it,
+            ),
+          ),
+        ),
         scanner,
       ),
       emitsInOrder(
@@ -79,8 +91,14 @@ void main() {
 
       expect(
         ScanStream.from(
-          [BluetoothState.off, BluetoothState.on].asStreamWithDelay(),
-          Stream.value(LocationServicesState.on),
+          Stream.fromIterable(
+            [BluetoothState.off, BluetoothState.on].map(
+              (it) => DeviceState(
+                locationServicesState: LocationServicesState.on,
+                bluetoothState: it,
+              ),
+            ),
+          ),
           scanner,
         ),
         emitsInOrder([
@@ -107,20 +125,28 @@ void main() {
   test(
     'when bluetooth state turned off during scan, ble scan stops',
     () async {
+      final onEvent = DeviceState(
+        bluetoothState: BluetoothState.on,
+        locationServicesState: LocationServicesState.on,
+      );
+
+      final offEvent = DeviceState(
+        bluetoothState: BluetoothState.off,
+        locationServicesState: LocationServicesState.on,
+      );
+
       // ignore: close_sinks
-      final controller = StreamController<BluetoothState>()
-        ..add(BluetoothState.on);
+      final controller = StreamController<DeviceState>()..add(onEvent);
 
       final scanStream = Stream.fromIterable(_scanResults).doOnData((event) {
         // after first event, change bluetooth state
-        controller.add(BluetoothState.off);
+        controller.add(offEvent);
       });
       when(scanner.scan()).thenAnswer((_) => scanStream);
 
       expectLater(
         ScanStream.from(
           controller.stream,
-          Stream.value(LocationServicesState.on),
           scanner,
         ),
         emitsInOrder([
@@ -138,26 +164,6 @@ void main() {
       );
     },
   );
-}
-
-/// stream helper, where every event is delayed by 100ms to ensure sequential
-/// processing of combineLatest
-
-extension _DelayedStreamExtension<T> on List<T> {
-  Stream<T> asStreamWithDelay<T>({
-    Duration delayPerItem = const Duration(milliseconds: 100),
-  }) {
-    final list = List.from(this);
-    return Stream.fromFutures(
-      List.generate(
-        list.length,
-        (index) => Future.delayed(
-          delayPerItem * index,
-          () => list[index],
-        ),
-      ),
-    );
-  }
 }
 
 const _scanResults = [
