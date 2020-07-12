@@ -9,6 +9,9 @@ class LocationServicesStateStream extends StreamView<LocationServicesState> {
   const LocationServicesStateStream._(Stream<LocationServicesState> stream)
       : super(stream);
 
+  /// ios devices do not need location services for BLE scanning;
+  /// avoid invoking platform-interfaces that would require location permissions
+  /// by emitting [LocationServicesState.notRequired]
   factory LocationServicesStateStream.ios() => LocationServicesStateStream._(
         Stream.value(LocationServicesState.notRequired),
       );
@@ -23,6 +26,10 @@ class LocationServicesStateStream extends StreamView<LocationServicesState> {
   }
 }
 
+///
+/// queries the current LocationServices permission status and serviceStatus and
+/// maps the result to a [LocationServicesState] instance
+///
 @visibleForTesting
 Future<LocationServicesState> requestLocationServicesState(
   PermissionWithService locationWhenInUsePermission,
