@@ -31,11 +31,13 @@ extension EddystoneUidParser on AdvertisementData {
         "AdvertisementData $this does not contain any "
         "serviceData associated with serviceUuid $serviceUuid",
       );
-    } else if (frame.length != EddystoneUid.frameLength) {
+    } else if (frame.length != EddystoneUid.frameLength &&
+        frame.length != EddystoneUid.frameLengthWithReservedBytes) {
       throw FormatException(
         "ServiceData associated with serviceUuid $serviceUuid does not match "
         "the Eddystone-Uid frame-length\n"
-        "should be ${EddystoneUid.frameLength} but was ${frame.length}",
+        "should be ${EddystoneUid.frameLength} or "
+        "${EddystoneUid.frameLengthWithReservedBytes} but was ${frame.length}",
       );
     }
 

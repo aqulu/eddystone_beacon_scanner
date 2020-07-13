@@ -8,7 +8,8 @@ import 'package:flutter/foundation.dart';
 ///
 @immutable
 class EddystoneUid {
-  static const int frameLength = 20;
+  static const int frameLength = 18;
+  static const int frameLengthWithReservedBytes = 20;
 
   /// always 0 (0x00)
   final int frameType;
@@ -42,4 +43,10 @@ class EddystoneUid {
       other is EddystoneUid &&
           namespace == other.namespace &&
           instance == other.instance;
+
+  @override
+  String toString() => "EddystoneUid(\n"
+      "\tinstance: $instance,\n"
+      "\tnamespace: $namespace\n"
+      ")";
 }
