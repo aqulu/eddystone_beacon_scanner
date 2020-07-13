@@ -5,6 +5,7 @@ import 'package:eddystone_beacon_scanner/domain/scan_stream.dart';
 import 'package:eddystone_beacon_scanner/infrastructure/bluetooth_state_stream.dart';
 import 'package:eddystone_beacon_scanner/infrastructure/eddystone_scanner.dart';
 import 'package:eddystone_beacon_scanner/infrastructure/location_services_state_stream.dart';
+import 'package:eddystone_beacon_scanner/ui/loading_screen.dart';
 import 'package:eddystone_beacon_scanner/ui/scan_screen.dart';
 import 'package:eddystone_beacon_scanner/ui/setup_screen.dart';
 import 'package:flutter/material.dart';
@@ -51,7 +52,7 @@ class _ScreenSwitcher extends StatelessWidget {
       Selector<Either<DeviceState, List<EddystoneUid>>, Option<bool>>(
         selector: (_, either) => optionOf(either?.isRight()),
         builder: (_, Option<bool> canScanOption, __) => canScanOption.fold(
-          () => Center(child: CircularProgressIndicator()),
+          () => LoadingScreen(),
           (canScan) => canScan ? ScanScreen() : SetupScreen(),
         ),
       );
