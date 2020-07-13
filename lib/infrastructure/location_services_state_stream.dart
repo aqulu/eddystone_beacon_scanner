@@ -22,7 +22,7 @@ class LocationServicesStateStream extends StreamView<LocationServicesState> {
       );
 
   factory LocationServicesStateStream.android({
-    Duration interval = const Duration(seconds: 3),
+    Duration interval = const Duration(seconds: 1),
   }) {
     final stream = Stream.periodic(interval).asyncMap(
       (_) => requestLocationServicesState(
