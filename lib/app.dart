@@ -5,9 +5,10 @@ import 'package:eddystone_beacon_scanner/domain/scan_stream.dart';
 import 'package:eddystone_beacon_scanner/infrastructure/bluetooth_state_stream.dart';
 import 'package:eddystone_beacon_scanner/infrastructure/eddystone_scanner.dart';
 import 'package:eddystone_beacon_scanner/infrastructure/location_services_state_stream.dart';
-import 'package:eddystone_beacon_scanner/ui/home.dart';
+import 'package:eddystone_beacon_scanner/ui/scan_screen.dart';
+import 'package:eddystone_beacon_scanner/ui/setup_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_ble_lib/flutter_ble_lib.dart' as ble;
+import 'package:flutter_ble_lib/flutter_ble_lib.dart' show BleManager;
 import 'package:provider/provider.dart';
 
 class App extends StatelessWidget {
@@ -15,30 +16,20 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) => MultiProvider(
         providers: [
           Provider(
-            create: (_) => ble.BleManager()..createClient(),
-            dispose: (_, ble.BleManager bleManager) {
+            create: (_) => BleManager()..createClient(),
+            dispose: (_, BleManager bleManager) {
               bleManager.destroyClient();
             },
           ),
           StreamProvider<Either<DeviceState, List<EddystoneUid>>>(
             create: (context) {
-              final ble.BleManager bleManager = Provider.of(
-                context,
-                listen: false,
-              );
+              final BleManager bleManager = Provider.of(context, listen: false);
               return ScanStream(
                 BluetoothStateStream(bleManager),
                 LocationServicesStateStream.forPlatform(),
                 EddystoneScanner(bleManager),
               );
             },
-            initialData: left(
-              DeviceState(
-                bluetoothState: BluetoothState.unknown,
-                locationServicesState:
-                    LocationServicesState.permissionUndetermined,
-              ),
-            ),
           ),
         ],
         child: MaterialApp(
@@ -47,7 +38,21 @@ class App extends StatelessWidget {
             primarySwatch: Colors.blue,
             visualDensity: VisualDensity.adaptivePlatformDensity,
           ),
-          home: Home(),
+          home: _ScreenSwitcher(),
+        ),
+      );
+}
+
+/// switches between [ScanScreen] and [SetupScreen] depending on
+/// state emitted from ScanStream
+class _ScreenSwitcher extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) =>
+      Selector<Either<DeviceState, List<EddystoneUid>>, Option<bool>>(
+        selector: (_, either) => optionOf(either?.isRight()),
+        builder: (_, Option<bool> canScanOption, __) => canScanOption.fold(
+          () => Center(child: CircularProgressIndicator()),
+          (canScan) => canScan ? ScanScreen() : SetupScreen(),
         ),
       );
 }

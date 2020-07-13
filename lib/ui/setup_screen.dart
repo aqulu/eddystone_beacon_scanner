@@ -1,40 +1,21 @@
-import 'package:dartz/dartz.dart' as dartz;
+import 'package:dartz/dartz.dart' show Either;
 import 'package:eddystone_beacon_scanner/domain/device_state.dart';
 import 'package:eddystone_beacon_scanner/domain/eddystone_uid.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class Home extends StatelessWidget {
+class SetupScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) => SafeArea(
         child: Scaffold(
-          body: MultiProvider(
-            providers: [
-              /// Proxy Either to List<EddystoneUid> for _Scan widget
-              ProxyProvider<dartz.Either<DeviceState, List<EddystoneUid>>,
-                  List<EddystoneUid>>(
-                update: (_, either, __) => either.getOrElse(() => []),
-                updateShouldNotify: (previous, current) {
-                  return !listEquals(previous, current);
-                },
-              ),
-
-              /// Proxy Either to DeviceState for _Scan widget
-              ProxyProvider<dartz.Either<DeviceState, List<EddystoneUid>>,
-                  DeviceState>(
-                update: (_, either, __) => either.fold(
-                  (deviceState) => deviceState,
-                  (_) => null,
-                ),
-              ),
-            ],
-            // avoid rebuilding whole screen on scan result update
-            child:
-                Selector<dartz.Either<DeviceState, List<EddystoneUid>>, bool>(
-              selector: (_, either) => either.isRight(),
-              builder: (_, bool canScan, __) => canScan ? _Scan() : _Setup(),
+          body: ProxyProvider<Either<DeviceState, List<EddystoneUid>>,
+              DeviceState>(
+            update: (_, either, __) => either.fold(
+              (deviceState) => deviceState,
+              (_) => null,
             ),
+            // avoid rebuilding whole screen on scan result update
+            child: _Setup(),
           ),
         ),
       );
@@ -107,44 +88,6 @@ class _Setup extends StatelessWidget {
               // TODO open location service settings
             },
           ),
-      ],
-    );
-  }
-}
-
-class _Scan extends StatefulWidget {
-  @override
-  __ScanState createState() => __ScanState();
-}
-
-class __ScanState extends State<_Scan> {
-  @override
-  Widget build(BuildContext context) {
-    final List<EddystoneUid> eddystoneUids = Provider.of(context);
-    return CustomScrollView(
-      slivers: [
-        SliverGrid(
-          gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-            maxCrossAxisExtent: 2.0,
-            mainAxisSpacing: 0,
-            crossAxisSpacing: 0,
-            childAspectRatio: 1.0,
-          ),
-          delegate: SliverChildBuilderDelegate(
-            (_, int index) {
-              final element = eddystoneUids[index];
-              return Card(
-                child: Column(
-                  children: [
-                    Text(element.instance),
-                    Text(element.namespace),
-                  ],
-                ),
-              );
-            },
-            childCount: eddystoneUids.length,
-          ),
-        ),
       ],
     );
   }
