@@ -94,6 +94,22 @@ void main() {
       expect(eddystoneUid.instance, '9603ffffffff');
     },
   );
+
+  test(
+    'when frame does not contain reserved bytes parsing still succeeds',
+    () {
+      final advertisementData = AdvertisementDataMock(
+        serviceUuids: ['1'],
+        serviceData: {
+          '1': Uint8List.fromList(_examplePayload.getRange(0, 18).toList())
+        },
+      );
+      final eddystoneUid = advertisementData.toEddystoneUid();
+
+      expect(eddystoneUid.namespace, '10000000000000000000');
+      expect(eddystoneUid.instance, '9603ffffffff');
+    },
+  );
 }
 
 const _examplePayload = [
