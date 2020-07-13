@@ -2,6 +2,16 @@ import 'package:eddystone_beacon_scanner/domain/eddystone_uid.dart';
 import 'package:flutter_ble_lib/flutter_ble_lib.dart';
 
 extension EddystoneUidParser on AdvertisementData {
+  /// similar to [AdvertisementData.toEddystoneUid] but returns [null] instead of throwing a
+  /// [FormatException]
+  EddystoneUid tryParseToEddystoneUid() {
+    try {
+      return toEddystoneUid();
+    } catch (formatException) {
+      return null;
+    }
+  }
+
   /// parses [AdvertisementData] serviceData that matches the first
   /// [AdvertisementData.serviceUuids] entry to an [EddystoneUid] instance
   /// throws a [FormatException] if the advertised frame does not match the Eddystone-Uid format

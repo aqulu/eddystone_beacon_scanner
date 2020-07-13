@@ -11,6 +11,8 @@ class EddystoneScanner {
   /// start BLE scan and transforms scanResults into [EddystoneUid]s
   Stream<EddystoneUid> scan() => _bleManager
       .scan()
-      .where((scanResult) => scanResult.advertisementData != null)
-      .map((scanResult) => scanResult.advertisementData.toEddystoneUid());
+      .map(
+        (scanResult) => scanResult.advertisementData?.tryParseToEddystoneUid(),
+      )
+      .where((event) => event != null);
 }
