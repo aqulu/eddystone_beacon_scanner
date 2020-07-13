@@ -2,22 +2,17 @@ import 'package:eddystone_beacon_scanner/domain/eddystone_uid.dart';
 import 'package:flutter_ble_lib/flutter_ble_lib.dart';
 
 extension EddystoneUidParser on AdvertisementData {
-  /// similar to [AdvertisementData.toEddystoneUid] but returns [null] instead of throwing a
-  /// [FormatException]
-  EddystoneUid tryParseToEddystoneUid() {
-    try {
-      return toEddystoneUid();
-    } catch (formatException) {
-      return null;
-    }
-  }
-
   /// parses [AdvertisementData] serviceData that matches the first
   /// [AdvertisementData.serviceUuids] entry to an [EddystoneUid] instance
+  ///
   /// throws a [FormatException] if the advertised frame does not match the Eddystone-Uid format
-  EddystoneUid toEddystoneUid() {
+  /// or, if [suppressErrors] is true, returns [null] instead of throwing
+  EddystoneUid toEddystoneUid({bool suppressErrors = false}) {
+    final returnNullOrThrow = (String message) =>
+        (suppressErrors) ? null : throw FormatException(message);
+
     if (serviceUuids == null || serviceUuids.isEmpty) {
-      throw FormatException(
+      return returnNullOrThrow(
         "AdvertisementData $this does not contain any "
         "serviceUuid data",
       );
@@ -27,13 +22,13 @@ extension EddystoneUidParser on AdvertisementData {
     final frame = serviceData[serviceUuid];
 
     if (frame == null) {
-      throw FormatException(
+      return returnNullOrThrow(
         "AdvertisementData $this does not contain any "
         "serviceData associated with serviceUuid $serviceUuid",
       );
     } else if (frame.length != EddystoneUid.frameLength &&
         frame.length != EddystoneUid.frameLengthWithReservedBytes) {
-      throw FormatException(
+      return returnNullOrThrow(
         "ServiceData associated with serviceUuid $serviceUuid does not match "
         "the Eddystone-Uid frame-length\n"
         "should be ${EddystoneUid.frameLength} or "
