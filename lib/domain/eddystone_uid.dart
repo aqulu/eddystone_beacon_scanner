@@ -12,7 +12,7 @@ class EddystoneUid {
   static const int frameLengthWithReservedBytes = 20;
 
   /// always 0 (0x00)
-  final int frameType;
+  static const int frameType = 0x00;
 
   /// txPower in dBm at 0 meters
   final int txPower;
@@ -26,12 +26,10 @@ class EddystoneUid {
   final String instance;
 
   const EddystoneUid({
-    @required this.frameType,
     @required this.txPower,
     @required this.namespace,
     @required this.instance,
-  })  : assert(frameType == 0),
-        assert(namespace.length == 20),
+  })  : assert(namespace.length == 20),
         assert(instance.length == 12);
 
   @override

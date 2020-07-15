@@ -36,8 +36,13 @@ extension EddystoneUidParser on AdvertisementData {
       );
     }
 
+    if (frame[0] != EddystoneUid.frameType) {
+      return returnNullOrThrow(
+        "Eddystone-uid frameType should be 0x00 but was ${frame[0]}}",
+      );
+    }
+
     return EddystoneUid(
-      frameType: frame[0],
       txPower: frame[1],
       namespace:
           frame.sublist(2, 12).map((b) => b.to2DigitRadix16String()).join(),

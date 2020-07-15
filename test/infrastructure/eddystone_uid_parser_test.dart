@@ -82,6 +82,25 @@ void main() {
   );
 
   test(
+    'when frameType is other than 0x00 results in FormatException',
+    () {
+      final data = AdvertisementDataMock(
+        serviceUuids: ['1'],
+        serviceData: {
+          '1': Uint8List.fromList(
+            List.from(_examplePayload)..replaceRange(0, 1, [1]),
+          )
+        },
+      );
+
+      expect(
+        () => data.toEddystoneUid(),
+        throwsA(isInstanceOf<FormatException>()),
+      );
+    },
+  );
+
+  test(
     'single digit numbers are expanded to 2 digit strings',
     () {
       final advertisementData = AdvertisementDataMock(

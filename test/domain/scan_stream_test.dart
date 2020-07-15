@@ -168,13 +168,11 @@ void main() {
 
 const _scanResults = [
   EddystoneUid(
-    frameType: 0,
     txPower: 0,
     namespace: "aaaaabbbbbcccccddddd",
     instance: "aaaaaabbbbbb",
   ),
   EddystoneUid(
-    frameType: 0,
     txPower: 0,
     namespace: "bbbbbcccccdddddeeeee",
     instance: "bbbbbbcccccc",
