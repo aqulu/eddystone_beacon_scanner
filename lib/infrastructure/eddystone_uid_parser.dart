@@ -43,7 +43,7 @@ extension EddystoneUidParser on AdvertisementData {
     }
 
     return EddystoneUid(
-      txPower: frame[1],
+      txPower: frame[1].toSigned(8),
       namespace:
           frame.sublist(2, 12).map((b) => b.to2DigitRadix16String()).join(),
       instance:
