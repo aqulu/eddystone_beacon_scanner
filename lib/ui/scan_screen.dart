@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart' show Either;
 import 'package:eddystone_beacon_scanner/domain/device_state.dart';
 import 'package:eddystone_beacon_scanner/domain/eddystone_uid.dart';
+import 'package:eddystone_beacon_scanner/ui/widgets/scan_result.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -41,19 +42,7 @@ class _ScanResultsState extends State<_ScanResults> {
             childAspectRatio: 1.0,
           ),
           delegate: SliverChildBuilderDelegate(
-            (_, int index) {
-              final element = eddystoneUids[index];
-              return Card(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(element.instance),
-                    Text(element.namespace),
-                  ],
-                ),
-              );
-            },
+            (_, int index) => ScanResultCard(eddystoneUids[index]),
             childCount: eddystoneUids.length,
           ),
         ),
