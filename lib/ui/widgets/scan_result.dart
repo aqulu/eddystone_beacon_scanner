@@ -24,6 +24,7 @@ class ScanResultCard extends StatelessWidget {
               _eddystoneUid.instance,
               style: textTheme.bodyText1,
             ),
+            Text("${_eddystoneUid.txPower} dBm")
           ],
         ),
       ),
