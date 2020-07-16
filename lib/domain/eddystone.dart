@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:eddystone_beacon_scanner/domain/parsers/eddystone_eid_parser.dart';
 import 'package:eddystone_beacon_scanner/domain/parsers/eddystone_uid_parser.dart';
+import 'package:eddystone_beacon_scanner/domain/parsers/eddystone_url_parser.dart';
 import 'package:flutter/foundation.dart';
 
 abstract class EddystonePayload {
@@ -30,6 +31,8 @@ abstract class EddystonePayload {
         return payload.toEddystoneUid(suppressErrors: suppressErrors);
       case EddystoneEid.frameType:
         return payload.toEddystoneEid(suppressErrors: suppressErrors);
+      case EddystoneUrl.frameType:
+        return payload.toEddystoneUrl(suppressErrors: suppressErrors);
       default:
         return returnNullOrThrow(
           "FrameType $frameType did not match any of the supported "
