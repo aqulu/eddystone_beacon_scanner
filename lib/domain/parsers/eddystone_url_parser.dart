@@ -1,39 +1,37 @@
 import 'dart:math';
 import 'dart:typed_data';
 
+import 'package:dartz/dartz.dart';
 import 'package:eddystone_beacon_scanner/domain/eddystone.dart';
 
 extension EddystoneUrlParser on Uint8List {
   /// parses this [Uint8List] to an [EddystoneUrl] instance
   ///
-  /// throws a [FormatException] if the advertised frame does not match the Eddystone-Url format
-  /// or, if [suppressErrors] is true, returns [null] instead of throwing
-  EddystoneUrl toEddystoneUrl({bool suppressErrors = false}) {
-    final returnNullOrThrow = (String message) =>
-        (suppressErrors) ? null : throw FormatException(message);
-
+  /// returns [FormatException] as [Left] if the advertised frame does not match the Eddystone-Url format
+  /// or the successfully parsed [EddystoneUrl] as [Right]
+  Either<FormatException, EddystoneUrl> toEddystoneUrl() {
     if (elementAt(0) != EddystoneUrl.frameType) {
-      return returnNullOrThrow(
+      return left(FormatException(
         "Eddystone-Url frameType should be ${EddystoneUrl.frameType} "
         "but was ${elementAt(0)}}",
-      );
+      ));
     }
 
     if (length < EddystoneUrl.minFrameLength ||
         length > EddystoneUrl.maxFrameLength) {
-      return returnNullOrThrow(
+      return left(FormatException(
         "payload does not match the Eddystone-Url frame-length\n"
         "should be between ${EddystoneUrl.minFrameLength} and "
         "${EddystoneUrl.maxFrameLength} but was $length",
-      );
+      ));
     }
 
     final urlSchemePrefix = _urlSchemePrefixes[elementAt(2)];
     if (urlSchemePrefix == null) {
-      return returnNullOrThrow(
+      return left(FormatException(
         "invalid urlScheme: ${elementAt(2)}. should be one "
         "of ${_urlSchemePrefixes.keys.toList()}",
-      );
+      ));
     }
 
     final url = sublist(3, min(length, EddystoneUrl.maxFrameLength))
@@ -41,10 +39,10 @@ extension EddystoneUrlParser on Uint8List {
         .where((it) => it != null)
         .join();
 
-    return EddystoneUrl(
+    return right(EddystoneUrl(
       txPower: elementAt(1).toSigned(8),
       url: urlSchemePrefix + url,
-    );
+    ));
   }
 
   /// ref: https://github.com/google/eddystone/tree/master/eddystone-url#url-scheme-prefix

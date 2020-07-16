@@ -1,5 +1,7 @@
 import 'dart:typed_data';
 
+import 'package:dartz/dartz.dart';
+import 'package:eddystone_beacon_scanner/domain/eddystone.dart';
 import 'package:eddystone_beacon_scanner/domain/parsers/eddystone_url_parser.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -17,13 +19,13 @@ void main() {
       );
 
       expect(
-        () => dataWithInsufficientFrameLength.toEddystoneUrl(),
-        throwsA(isInstanceOf<FormatException>()),
+        dataWithInsufficientFrameLength.toEddystoneUrl(),
+        predicate((Either<FormatException, EddystoneUrl> e) => e.isLeft()),
       );
 
       expect(
-        () => dataWithTooLargeFrameLength.toEddystoneUrl(),
-        throwsA(isInstanceOf<FormatException>()),
+        dataWithTooLargeFrameLength.toEddystoneUrl(),
+        predicate((Either<FormatException, EddystoneUrl> e) => e.isLeft()),
       );
     },
   );
@@ -37,7 +39,10 @@ void main() {
         final data = Uint8List.fromList(
           List.from(_ddg)..insert(insertionIndex, i),
         );
-        expect(data.toEddystoneUrl().url, "https://ddg.gg/");
+        expect(
+          data.toEddystoneUrl().map((r) => r.url),
+          right("https://ddg.gg/"),
+        );
       }
 
       // range 2
@@ -45,7 +50,10 @@ void main() {
         final data = Uint8List.fromList(
           List.from(_ddg)..insert(insertionIndex, i),
         );
-        expect(data.toEddystoneUrl().url, "https://ddg.gg/");
+        expect(
+          data.toEddystoneUrl().map((r) => r.url),
+          right("https://ddg.gg/"),
+        );
       }
     },
   );
@@ -58,8 +66,8 @@ void main() {
       );
 
       expect(
-        () => payload.toEddystoneUrl(),
-        throwsA(isInstanceOf<FormatException>()),
+        payload.toEddystoneUrl(),
+        predicate((Either<FormatException, EddystoneUrl> e) => e.isLeft()),
       );
     },
   );
@@ -81,10 +89,22 @@ void main() {
       List.from(_ddg)..replaceRange(2, 3, [3]),
     );
 
-    expect(httpWww.toEddystoneUrl().url, 'http://www.ddg.gg/');
-    expect(httpsWww.toEddystoneUrl().url, 'https://www.ddg.gg/');
-    expect(http.toEddystoneUrl().url, 'http://ddg.gg/');
-    expect(https.toEddystoneUrl().url, 'https://ddg.gg/');
+    expect(
+      httpWww.toEddystoneUrl().map((r) => r.url),
+      right('http://www.ddg.gg/'),
+    );
+    expect(
+      httpsWww.toEddystoneUrl().map((r) => r.url),
+      right('https://www.ddg.gg/'),
+    );
+    expect(
+      http.toEddystoneUrl().map((r) => r.url),
+      right('http://ddg.gg/'),
+    );
+    expect(
+      https.toEddystoneUrl().map((r) => r.url),
+      right('https://ddg.gg/'),
+    );
   });
 
   test(
@@ -95,16 +115,16 @@ void main() {
       );
 
       expect(
-        () => payload.toEddystoneUrl(),
-        throwsA(isInstanceOf<FormatException>()),
+        payload.toEddystoneUrl(),
+        predicate((Either<FormatException, EddystoneUrl> e) => e.isLeft()),
       );
     },
   );
 
   test('decode max length frame', () {
     expect(
-      Uint8List.fromList(_hn).toEddystoneUrl().url,
-      "https://news.ycombinator.com",
+      Uint8List.fromList(_hn).toEddystoneUrl().map((r) => r.url),
+      right('https://news.ycombinator.com'),
     );
   });
 }

@@ -21,23 +21,23 @@ abstract class EddystonePayload {
     Uint8List payload, {
     bool suppressErrors = false,
   }) {
-    final returnNullOrThrow = (String message) =>
-        (suppressErrors) ? null : throw FormatException(message);
+    final nullOrThrow = (FormatException formatException) =>
+        (suppressErrors) ? null : throw formatException;
 
     final frameType = payload.length > 0 ? payload[0] : null;
 
     switch (frameType) {
       case EddystoneUid.frameType:
-        return payload.toEddystoneUid(suppressErrors: suppressErrors);
+        return payload.toEddystoneUid().fold(nullOrThrow, (r) => r);
       case EddystoneEid.frameType:
-        return payload.toEddystoneEid(suppressErrors: suppressErrors);
+        return payload.toEddystoneEid().fold(nullOrThrow, (r) => r);
       case EddystoneUrl.frameType:
-        return payload.toEddystoneUrl(suppressErrors: suppressErrors);
+        return payload.toEddystoneUrl().fold(nullOrThrow, (r) => r);
       default:
-        return returnNullOrThrow(
+        return nullOrThrow(FormatException(
           "FrameType $frameType did not match any of the supported "
           "eddystone formats",
-        );
+        ));
     }
   }
 }

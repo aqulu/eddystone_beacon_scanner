@@ -1,5 +1,7 @@
 import 'dart:typed_data';
 
+import 'package:dartz/dartz.dart';
+import 'package:eddystone_beacon_scanner/domain/eddystone.dart';
 import 'package:eddystone_beacon_scanner/domain/parsers/eddystone_eid_parser.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -17,13 +19,13 @@ void main() {
       );
 
       expect(
-        () => dataWithInsufficientFrameLength.toEddystoneEid(),
-        throwsA(isInstanceOf<FormatException>()),
+        dataWithInsufficientFrameLength.toEddystoneEid(),
+        predicate((Either<FormatException, EddystoneEid> e) => e.isLeft()),
       );
 
       expect(
-        () => dataWithTooLargeFrameLength.toEddystoneEid(),
-        throwsA(isInstanceOf<FormatException>()),
+        dataWithTooLargeFrameLength.toEddystoneEid(),
+        predicate((Either<FormatException, EddystoneEid> e) => e.isLeft()),
       );
     },
   );
@@ -36,8 +38,8 @@ void main() {
       );
 
       expect(
-        () => payload.toEddystoneEid(),
-        throwsA(isInstanceOf<FormatException>()),
+        payload.toEddystoneEid(),
+        predicate((Either<FormatException, EddystoneEid> e) => e.isLeft()),
       );
     },
   );
@@ -48,7 +50,7 @@ void main() {
       final payload = Uint8List.fromList(_examplePayload);
       final eddystoneEid = payload.toEddystoneEid();
 
-      expect(eddystoneEid.eid, '1000000000000000');
+      expect(eddystoneEid.map((r) => r.eid), right('1000000000000000'));
     },
   );
 }

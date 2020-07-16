@@ -1,5 +1,7 @@
 import 'dart:typed_data';
 
+import 'package:dartz/dartz.dart';
+import 'package:eddystone_beacon_scanner/domain/eddystone.dart';
 import 'package:eddystone_beacon_scanner/domain/parsers/eddystone_uid_parser.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -17,13 +19,13 @@ void main() {
       );
 
       expect(
-        () => dataWithInsufficientFrameLength.toEddystoneUid(),
-        throwsA(isInstanceOf<FormatException>()),
+        dataWithInsufficientFrameLength.toEddystoneUid(),
+        predicate((Either<FormatException, EddystoneUid> e) => e.isLeft()),
       );
 
       expect(
-        () => dataWithTooLargeFrameLength.toEddystoneUid(),
-        throwsA(isInstanceOf<FormatException>()),
+        dataWithTooLargeFrameLength.toEddystoneUid(),
+        predicate((Either<FormatException, EddystoneUid> e) => e.isLeft()),
       );
     },
   );
@@ -36,8 +38,8 @@ void main() {
       );
 
       expect(
-        () => data.toEddystoneUid(),
-        throwsA(isInstanceOf<FormatException>()),
+        data.toEddystoneUid(),
+        predicate((Either<FormatException, EddystoneUid> e) => e.isLeft()),
       );
     },
   );
@@ -48,8 +50,11 @@ void main() {
       final payload = Uint8List.fromList(_examplePayload);
       final eddystoneUid = payload.toEddystoneUid();
 
-      expect(eddystoneUid.namespace, '10000000000000000000');
-      expect(eddystoneUid.instance, '9603ffffffff');
+      expect(
+        eddystoneUid.map((r) => r.namespace),
+        right('10000000000000000000'),
+      );
+      expect(eddystoneUid.map((r) => r.instance), right('9603ffffffff'));
     },
   );
 
@@ -61,8 +66,11 @@ void main() {
       );
       final eddystoneUid = payload.toEddystoneUid();
 
-      expect(eddystoneUid.namespace, '10000000000000000000');
-      expect(eddystoneUid.instance, '9603ffffffff');
+      expect(
+        eddystoneUid.map((r) => r.namespace),
+        right('10000000000000000000'),
+      );
+      expect(eddystoneUid.map((r) => r.instance), right('9603ffffffff'));
     },
   );
 }
