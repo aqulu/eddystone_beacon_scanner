@@ -159,3 +159,23 @@ class EddystoneUrl implements EddystonePayload {
   @override
   String toString() => "EddystoneUrl(url: $url)";
 }
+
+extension When on EddystonePayload {
+  /// mimic kotlin's `when` for sealed classes
+  ///
+  /// (only handles subclasses defined in lib/domain/eddystone.dart; other will fall back to [fallback])
+  T when<T>({
+    @required T Function(EddystoneUid) eddystoneUid,
+    @required T Function(EddystoneEid) eddystoneEid,
+    @required T Function(EddystoneUrl) eddystoneUrl,
+    T Function(EddystonePayload) fallback,
+  }) {
+    if (this is EddystoneUid && eddystoneUid != null) return eddystoneUid(this);
+
+    if (this is EddystoneEid && eddystoneEid != null) return eddystoneEid(this);
+
+    if (this is EddystoneUrl && eddystoneUrl != null) return eddystoneUrl(this);
+
+    return (fallback != null) ? fallback(this) : null;
+  }
+}

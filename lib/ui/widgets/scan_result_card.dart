@@ -13,6 +13,7 @@ class ScanResultCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -27,12 +28,12 @@ class ScanResultCard extends StatelessWidget {
                 style: textTheme.caption,
               ),
             ),
-            if (_scanResult.payload is EddystoneUid)
-              ..._buildUidContent(_scanResult.payload, textTheme),
-            if (_scanResult.payload is EddystoneEid)
-              ..._buildEidContent(_scanResult.payload),
-            if (_scanResult.payload is EddystoneUrl)
-              ..._buildUrlContent(_scanResult.payload),
+            ..._scanResult.payload.when(
+              eddystoneUid: (uid) => _buildUidContent(uid, textTheme),
+              eddystoneEid: _buildEidContent,
+              eddystoneUrl: _buildUrlContent,
+              fallback: (_) => [],
+            ),
           ],
         ),
       ),
