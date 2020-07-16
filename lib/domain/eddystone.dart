@@ -1,6 +1,43 @@
+import 'dart:typed_data';
+
+import 'package:eddystone_beacon_scanner/domain/parsers/eddystone_eid_parser.dart';
+import 'package:eddystone_beacon_scanner/domain/parsers/eddystone_uid_parser.dart';
 import 'package:flutter/foundation.dart';
 
-abstract class EddystonePayload {}
+abstract class EddystonePayload {
+  // hide constructor
+  // ignore: unused_element
+  const EddystonePayload._();
+
+  ///
+  /// parses an [Uint8List] to an [EddystonePayload]
+  ///
+  /// throws a [FormatException] if the advertised frame does not match any of the
+  /// supported Eddystone formats
+  /// or, if [suppressErrors] is true, returns [null] instead of throwing
+  ///
+  factory EddystonePayload.parse(
+    Uint8List payload, {
+    bool suppressErrors = false,
+  }) {
+    final returnNullOrThrow = (String message) =>
+        (suppressErrors) ? null : throw FormatException(message);
+
+    final frameType = payload.length > 0 ? payload[0] : null;
+
+    switch (frameType) {
+      case EddystoneUid.frameType:
+        return payload.toEddystoneUid(suppressErrors: suppressErrors);
+      case EddystoneEid.frameType:
+        return payload.toEddystoneEid(suppressErrors: suppressErrors);
+      default:
+        return returnNullOrThrow(
+          "FrameType $frameType did not match any of the supported "
+          "eddystone formats",
+        );
+    }
+  }
+}
 
 ///
 /// holds radix16 string representations of the fields present in
