@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:dartz/dartz.dart';
 import 'package:eddystone_beacon_scanner/core/timed_cache_transformer.dart';
 import 'package:eddystone_beacon_scanner/domain/device_state.dart';
-import 'package:eddystone_beacon_scanner/domain/eddystone_uid.dart';
+import 'package:eddystone_beacon_scanner/domain/eddystone.dart';
 import 'package:eddystone_beacon_scanner/infrastructure/eddystone_scanner.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:stream_transform/stream_transform.dart' show CombineLatest;

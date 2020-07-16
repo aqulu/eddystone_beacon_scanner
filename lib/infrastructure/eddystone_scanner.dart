@@ -1,4 +1,4 @@
-import 'package:eddystone_beacon_scanner/domain/eddystone_uid.dart';
+import 'package:eddystone_beacon_scanner/domain/eddystone.dart';
 import 'package:eddystone_beacon_scanner/infrastructure/ble_manager_safe_scan.dart';
 import 'package:eddystone_beacon_scanner/infrastructure/eddystone_uid_parser.dart';
 import 'package:flutter_ble_lib/flutter_ble_lib.dart';

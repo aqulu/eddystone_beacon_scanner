@@ -1,4 +1,4 @@
-import 'package:eddystone_beacon_scanner/domain/eddystone_uid.dart';
+import 'package:eddystone_beacon_scanner/domain/eddystone.dart';
 import 'package:flutter/material.dart';
 
 ///

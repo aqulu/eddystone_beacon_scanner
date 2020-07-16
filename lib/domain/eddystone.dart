@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
 
+abstract class EddystonePayload {}
+
 ///
 /// holds radix16 string representations of the fields present in
 /// Eddystone-UID frame broadcasts
@@ -7,7 +9,7 @@ import 'package:flutter/foundation.dart';
 /// format ref: https://github.com/google/eddystone/tree/master/eddystone-uid/
 ///
 @immutable
-class EddystoneUid {
+class EddystoneUid implements EddystonePayload {
   static const int frameLength = 18;
   static const int frameLengthWithReservedBytes = 20;
 
@@ -47,4 +49,39 @@ class EddystoneUid {
       "\tinstance: $instance,\n"
       "\tnamespace: $namespace\n"
       ")";
+}
+
+///
+/// holds radix16 string representations of the eid field present in
+/// Eddystone-EID frame broadcasts
+///
+/// format ref: https://github.com/google/eddystone/tree/master/eddystone-eid/
+///
+class EddystoneEid implements EddystonePayload {
+  static const int frameLength = 10;
+
+  /// always 0x30
+  static const int frameType = 0x30;
+
+  /// txPower in dBm at 0 meters
+  final int txPower;
+
+  /// ephemeral identifier
+  /// (8 byte; radix16 string length = 16)
+  final String eid;
+
+  const EddystoneEid({
+    @required this.txPower,
+    @required this.eid,
+  }) : assert(eid.length == 16);
+
+  @override
+  int get hashCode => eid.hashCode;
+
+  @override
+  bool operator ==(other) =>
+      identical(this, other) || other is EddystoneEid && eid == other.eid;
+
+  @override
+  String toString() => "EddystoneEid(eid: $eid)";
 }

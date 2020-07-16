@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart' show Either;
 import 'package:eddystone_beacon_scanner/domain/device_state.dart';
-import 'package:eddystone_beacon_scanner/domain/eddystone_uid.dart';
+import 'package:eddystone_beacon_scanner/domain/eddystone.dart';
 import 'package:eddystone_beacon_scanner/ui/widgets/scan_result.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
