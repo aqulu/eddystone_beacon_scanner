@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dartz/dartz.dart';
 import 'package:eddystone_beacon_scanner/domain/device_state.dart';
 import 'package:eddystone_beacon_scanner/domain/eddystone.dart';
+import 'package:eddystone_beacon_scanner/domain/scan_result.dart';
 import 'package:eddystone_beacon_scanner/domain/scan_stream.dart';
 import 'package:eddystone_beacon_scanner/infrastructure/eddystone_scanner.dart';
 import 'package:flutter/foundation.dart';
@@ -107,13 +108,13 @@ void main() {
             locationServicesState: LocationServicesState.on,
           )),
           predicate(
-            (Either<dynamic, List<EddystoneUid>> actual) => listEquals(
+            (Either<dynamic, List<ScanResult>> actual) => listEquals(
               _scanResults.getRange(0, 1).toList(),
               actual.getOrElse(() => null),
             ),
           ),
           predicate(
-            (Either<dynamic, List<EddystoneUid>> actual) => listEquals(
+            (Either<dynamic, List<ScanResult>> actual) => listEquals(
               _scanResults,
               actual.getOrElse(() => null),
             ),
@@ -151,7 +152,7 @@ void main() {
         ),
         emitsInOrder([
           predicate(
-            (Either<dynamic, List<EddystoneUid>> actual) => listEquals(
+            (Either<dynamic, List<ScanResult>> actual) => listEquals(
               _scanResults.getRange(0, 1).toList(),
               actual.getOrElse(() => null),
             ),
@@ -167,14 +168,20 @@ void main() {
 }
 
 const _scanResults = [
-  EddystoneUid(
-    txPower: 0,
-    namespace: "aaaaabbbbbcccccddddd",
-    instance: "aaaaaabbbbbb",
+  ScanResult(
+    rssi: 0,
+    payload: EddystoneUid(
+      txPower: 0,
+      namespace: "aaaaabbbbbcccccddddd",
+      instance: "aaaaaabbbbbb",
+    ),
   ),
-  EddystoneUid(
-    txPower: 0,
-    namespace: "bbbbbcccccdddddeeeee",
-    instance: "bbbbbbcccccc",
+  ScanResult(
+    rssi: 0,
+    payload: EddystoneUid(
+      txPower: 0,
+      namespace: "bbbbbcccccdddddeeeee",
+      instance: "bbbbbbcccccc",
+    ),
   ),
 ];

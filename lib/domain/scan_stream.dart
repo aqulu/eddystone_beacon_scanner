@@ -4,14 +4,15 @@ import 'package:dartz/dartz.dart';
 import 'package:eddystone_beacon_scanner/core/timed_cache_transformer.dart';
 import 'package:eddystone_beacon_scanner/domain/device_state.dart';
 import 'package:eddystone_beacon_scanner/domain/eddystone.dart';
+import 'package:eddystone_beacon_scanner/domain/scan_result.dart';
 import 'package:eddystone_beacon_scanner/infrastructure/eddystone_scanner.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:stream_transform/stream_transform.dart' show CombineLatest;
 
 /// a stream emitting [DeviceState] as left, if permissions or service state are insufficient for performing BLE scan,
 /// or a continuously updated list of [EddystoneUid]s as right, when scanning is in progress
-class ScanStream extends StreamView<Either<DeviceState, List<EddystoneUid>>> {
-  const ScanStream._(Stream<Either<DeviceState, List<EddystoneUid>>> stream)
+class ScanStream extends StreamView<Either<DeviceState, List<ScanResult>>> {
+  const ScanStream._(Stream<Either<DeviceState, List<ScanResult>>> stream)
       : super(stream);
 
   factory ScanStream(
@@ -31,18 +32,18 @@ class ScanStream extends StreamView<Either<DeviceState, List<EddystoneUid>>> {
     Stream<DeviceState> deviceStateStream,
     EddystoneScanner eddystoneScanner,
   ) {
-    final scanStream = deviceStateStream.distinct().switchMap(
-          (deviceState) => !deviceState.canPerformBleScan
-              ? Stream.value(left<DeviceState, List<EddystoneUid>>(deviceState))
-              : eddystoneScanner
-                  .scan()
-                  .cacheFor(
-                    Duration(seconds: 10),
-                    shouldPreventDuplicates: true,
-                  )
-                  .map((it) => right<DeviceState, List<EddystoneUid>>(it)),
-        );
-
+    final Stream<Either<DeviceState, List<ScanResult>>> scanStream =
+        deviceStateStream.distinct().switchMap(
+              (deviceState) => !deviceState.canPerformBleScan
+                  ? Stream.value(left(deviceState))
+                  : eddystoneScanner
+                      .scan()
+                      .cacheFor(
+                        Duration(seconds: 10),
+                        shouldPreventDuplicates: true,
+                      )
+                      .map(right),
+            );
     return ScanStream._(scanStream);
   }
 }

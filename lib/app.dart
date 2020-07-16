@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:eddystone_beacon_scanner/domain/device_state.dart';
 import 'package:eddystone_beacon_scanner/domain/eddystone.dart';
+import 'package:eddystone_beacon_scanner/domain/scan_result.dart';
 import 'package:eddystone_beacon_scanner/domain/scan_stream.dart';
 import 'package:eddystone_beacon_scanner/infrastructure/bluetooth_state_stream.dart';
 import 'package:eddystone_beacon_scanner/infrastructure/eddystone_scanner.dart';
@@ -22,7 +23,8 @@ class App extends StatelessWidget {
               bleManager.destroyClient();
             },
           ),
-          StreamProvider<Either<DeviceState, List<EddystoneUid>>>(
+          StreamProvider<
+              Either<DeviceState, List<ScanResult>>>(
             create: (context) {
               final BleManager bleManager = Provider.of(context, listen: false);
               return ScanStream(
@@ -48,8 +50,9 @@ class App extends StatelessWidget {
 /// state emitted from ScanStream
 class _ScreenSwitcher extends StatelessWidget {
   @override
-  Widget build(BuildContext context) =>
-      Selector<Either<DeviceState, List<EddystoneUid>>, Option<bool>>(
+  Widget build(BuildContext context) => Selector<
+          Either<DeviceState, List<ScanResult>>,
+          Option<bool>>(
         selector: (_, either) => optionOf(either?.isRight()),
         builder: (_, Option<bool> canScanOption, __) => canScanOption.fold(
           () => LoadingScreen(),

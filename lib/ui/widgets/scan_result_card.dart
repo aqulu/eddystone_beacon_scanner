@@ -1,13 +1,14 @@
 import 'package:eddystone_beacon_scanner/domain/eddystone.dart';
+import 'package:eddystone_beacon_scanner/domain/scan_result.dart';
 import 'package:flutter/material.dart';
 
 ///
 /// Displays a single [EddystoneUid] in a [Card] layout
 ///
 class ScanResultCard extends StatelessWidget {
-  final EddystoneUid _eddystoneUid;
+  final ScanResult _scanResult;
 
-  const ScanResultCard(this._eddystoneUid);
+  const ScanResultCard(this._scanResult);
 
   @override
   Widget build(BuildContext context) {
@@ -19,15 +20,45 @@ class ScanResultCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(_eddystoneUid.namespace),
-            Text(
-              _eddystoneUid.instance,
-              style: textTheme.bodyText1,
+            Align(
+              alignment: Alignment.topLeft,
+              child: Text(
+                "rssi: ${_scanResult.rssi}",
+                style: textTheme.caption,
+              ),
             ),
-            Text("${_eddystoneUid.txPower} dBm")
+            if (_scanResult.payload is EddystoneUid)
+              ..._buildUidContent(_scanResult.payload, textTheme),
+            if (_scanResult.payload is EddystoneEid)
+              ..._buildEidContent(_scanResult.payload),
+            if (_scanResult.payload is EddystoneUrl)
+              ..._buildUrlContent(_scanResult.payload),
           ],
         ),
       ),
     );
   }
+
+  List<Widget> _buildUidContent(
+    EddystoneUid uid,
+    TextTheme textTheme,
+  ) =>
+      [
+        Text(uid.namespace),
+        Text(
+          uid.instance,
+          style: textTheme.bodyText1,
+        ),
+        Text("${uid.txPower} dBm"),
+      ];
+
+  List<Widget> _buildEidContent(EddystoneEid eid) => [
+        Text(eid.eid),
+        Text("${eid.txPower} dBm"),
+      ];
+
+  List<Widget> _buildUrlContent(EddystoneUrl url) => [
+        Text(url.url),
+        Text("${url.txPower} dBm"),
+      ];
 }

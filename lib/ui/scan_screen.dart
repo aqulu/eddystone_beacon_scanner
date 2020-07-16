@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart' show Either;
 import 'package:eddystone_beacon_scanner/domain/device_state.dart';
-import 'package:eddystone_beacon_scanner/domain/eddystone.dart';
+import 'package:eddystone_beacon_scanner/domain/scan_result.dart';
 import 'package:eddystone_beacon_scanner/ui/widgets/scan_result_card.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -10,8 +10,8 @@ class ScanScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) => SafeArea(
         child: Scaffold(
-          body: ProxyProvider<Either<DeviceState, List<EddystoneUid>>,
-              List<EddystoneUid>>(
+          body: ProxyProvider<Either<DeviceState, List<ScanResult>>,
+              List<ScanResult>>(
             update: (_, either, __) => either.getOrElse(() => []),
             updateShouldNotify: (previous, current) {
               return !listEquals(previous, current);
@@ -30,7 +30,7 @@ class _ScanResults extends StatefulWidget {
 class _ScanResultsState extends State<_ScanResults> {
   @override
   Widget build(BuildContext context) {
-    final List<EddystoneUid> eddystoneUids = Provider.of(context);
+    final List<ScanResult> eddystoneUids = Provider.of(context);
 
     return CustomScrollView(
       slivers: [

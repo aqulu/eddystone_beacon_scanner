@@ -1,9 +1,10 @@
 import 'dart:typed_data';
 
 import 'package:eddystone_beacon_scanner/domain/eddystone.dart';
-import 'package:eddystone_beacon_scanner/domain/parsers/eddystone_uid_parser.dart';
+import 'package:eddystone_beacon_scanner/domain/scan_result.dart';
 import 'package:eddystone_beacon_scanner/infrastructure/ble_manager_safe_scan.dart';
-import 'package:flutter_ble_lib/flutter_ble_lib.dart';
+import 'package:flutter_ble_lib/flutter_ble_lib.dart'
+    show BleManager, AdvertisementData;
 
 class EddystoneScanner {
   final BleManager _bleManager;
@@ -11,10 +12,18 @@ class EddystoneScanner {
   const EddystoneScanner(this._bleManager);
 
   /// start BLE scan and transforms scanResults into [EddystoneUid]s
-  Stream<EddystoneUid> scan() => _bleManager.scan().map(
+  Stream<ScanResult> scan() => _bleManager.scan().map(
         (scanResult) {
-          final payload = scanResult.advertisementData?.payload;
-          return payload?.toEddystoneUid(suppressErrors: true);
+          final payload = EddystonePayload.parse(
+            scanResult.advertisementData?.payload ?? [],
+          );
+
+          return (payload != null)
+              ? ScanResult(
+                  rssi: scanResult.rssi,
+                  payload: payload,
+                )
+              : null;
         },
       ).where((event) => event != null);
 }
