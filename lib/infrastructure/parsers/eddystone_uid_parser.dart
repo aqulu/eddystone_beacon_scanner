@@ -1,3 +1,4 @@
+import 'package:eddystone_beacon_scanner/core/hex_string_parser.dart';
 import 'package:eddystone_beacon_scanner/domain/eddystone.dart';
 import 'package:flutter_ble_lib/flutter_ble_lib.dart';
 
@@ -44,30 +45,8 @@ extension EddystoneUidParser on AdvertisementData {
 
     return EddystoneUid(
       txPower: frame[1].toSigned(8),
-      namespace:
-          frame.sublist(2, 12).map((b) => b.to2DigitRadix16String()).join(),
-      instance:
-          frame.sublist(12, 18).map((b) => b.to2DigitRadix16String()).join(),
+      namespace: frame.sublist(2, 12).map((b) => b.toHexString()).join(),
+      instance: frame.sublist(12, 18).map((b) => b.toHexString()).join(),
     );
-  }
-}
-
-extension _Radix16StringParser on int {
-  ///
-  /// Converts this to a Radix 16 String representation.
-  /// if the result is shorter than 2 digits, the string will be prepended with zeroes
-  ///
-  /// throws a [FormatException] if the string representation is longer than 2 digits
-  ///
-  String to2DigitRadix16String() {
-    final radixString = toRadixString(16);
-    switch (radixString.length) {
-      case 1:
-        return "0$radixString";
-      case 2:
-        return radixString;
-      default:
-        throw FormatException("string representation is longer than 2 digits");
-    }
   }
 }
