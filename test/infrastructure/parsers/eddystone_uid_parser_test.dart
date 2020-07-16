@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:eddystone_beacon_scanner/infrastructure/eddystone_uid_parser.dart';
+import 'package:eddystone_beacon_scanner/infrastructure/parsers/eddystone_uid_parser.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_ble_lib/flutter_ble_lib.dart';
 import 'package:flutter_test/flutter_test.dart';
