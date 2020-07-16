@@ -2,7 +2,6 @@ import 'dart:typed_data';
 
 import 'package:eddystone_beacon_scanner/core/hex_string_parser.dart';
 import 'package:eddystone_beacon_scanner/domain/eddystone.dart';
-import 'package:flutter_ble_lib/flutter_ble_lib.dart';
 
 extension EddystoneUidParser on Uint8List {
   /// parses [AdvertisementData] serviceData that matches the first
