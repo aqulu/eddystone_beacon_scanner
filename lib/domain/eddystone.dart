@@ -122,3 +122,37 @@ class EddystoneEid implements EddystonePayload {
   @override
   String toString() => "EddystoneEid(eid: $eid)";
 }
+
+///
+/// holds a url string present in Eddystone-URL frame broadcasts
+///
+/// format ref: https://github.com/google/eddystone/tree/master/eddystone-url/
+///
+class EddystoneUrl implements EddystonePayload {
+  static const int minFrameLength = 4;
+  static const int maxFrameLength = 20;
+
+  /// always 0x10
+  static const int frameType = 0x10;
+
+  /// txPower in dBm at 0 meters
+  final int txPower;
+
+  /// url
+  final String url;
+
+  const EddystoneUrl({
+    @required this.txPower,
+    @required this.url,
+  });
+
+  @override
+  int get hashCode => url.hashCode;
+
+  @override
+  bool operator ==(other) =>
+      identical(this, other) || other is EddystoneUrl && url == other.url;
+
+  @override
+  String toString() => "EddystoneUrl(url: $url)";
+}
