@@ -29,8 +29,8 @@ extension EddystoneUidParser on Uint8List {
     }
     return EddystoneUid(
       txPower: elementAt(1).toSigned(8),
-      namespace: sublist(2, 12).map((b) => b.toHexString()).join(),
-      instance: sublist(12, 18).map((b) => b.toHexString()).join(),
+      namespace: sublist(2, 12).map(parseToHexString).join(),
+      instance: sublist(12, 18).map(parseToHexString).join(),
     );
   }
 }

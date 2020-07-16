@@ -7,7 +7,7 @@ void main() {
     () {
       final value = 256;
       expect(
-        () => value.toHexString(),
+        () => parseToHexString(value),
         throwsA(isInstanceOf<FormatException>()),
       );
     },
@@ -17,7 +17,7 @@ void main() {
     'prepends single character representations with 0',
     () {
       final value = 0x0E;
-      expect(value.toHexString(), "0e");
+      expect(parseToHexString(value), "0e");
     },
   );
 }

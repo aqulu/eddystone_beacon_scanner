@@ -28,7 +28,7 @@ extension EddystoneEidParser on Uint8List {
 
     return EddystoneEid(
       txPower: elementAt(1).toSigned(8),
-      eid: sublist(2, 10).map((b) => b.toHexString()).join(),
+      eid: sublist(2, 10).map(parseToHexString).join(),
     );
   }
 }
