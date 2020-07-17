@@ -19,12 +19,12 @@ abstract class EddystonePayload {
   ///
   factory EddystonePayload.parse(
     Uint8List payload, {
-    bool suppressErrors = false,
+    bool throwErrors = false,
   }) {
-    final nullOrThrow = (FormatException formatException) =>
-        (suppressErrors) ? null : throw formatException;
+    final frameType = payload != null && payload.isNotEmpty ? payload[0] : null;
 
-    final frameType = payload.length > 0 ? payload[0] : null;
+    final nullOrThrow = (FormatException formatException) =>
+        (throwErrors) ? throw formatException : null;
 
     switch (frameType) {
       case EddystoneUid.frameType:

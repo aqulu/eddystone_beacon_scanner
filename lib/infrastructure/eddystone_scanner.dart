@@ -15,7 +15,7 @@ class EddystoneScanner {
   Stream<ScanResult> scan() => _bleManager.scan().map(
         (scanResult) {
           final payload = EddystonePayload.parse(
-            scanResult.advertisementData?.payload ?? [],
+            scanResult.advertisementData?.payload,
           );
 
           return (payload != null)
