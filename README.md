@@ -1,6 +1,6 @@
 # eddystone_beacon_scanner
 
-A Bluetooth Low Energy (BLE) beacon scanning utility for Eddystone-Uid compatible beacons.
+A Bluetooth Low Energy (BLE) beacon scanning utility for Eddystone-Uid, Eddystone-Eid and Eddystone-Url compatible beacons.
 
 ### Setup
 
