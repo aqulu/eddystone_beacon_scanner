@@ -17,10 +17,10 @@ extension EddystoneEidParser on Uint8List {
       ));
     }
 
-    if (length != EddystoneEid.frameLength) {
+    if (length < EddystoneEid.frameLength) {
       return left(FormatException(
         "payload does not match the Eddystone-Eid frame-length\n"
-        "should be ${EddystoneEid.frameLength} but was $length",
+        "should be at least ${EddystoneEid.frameLength} but was $length",
       ));
     }
 

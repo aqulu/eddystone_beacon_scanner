@@ -7,13 +7,9 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   test(
-    'when frame does not match Eddystone-Eid length parsing results '
+    'when frame shorter than Eddystone-Eid length parsing results '
     'in FormatException',
     () {
-      final dataWithTooLargeFrameLength = Uint8List.fromList(
-        List.from(_examplePayload)..add(0),
-      );
-
       final dataWithInsufficientFrameLength = Uint8List.fromList(
         List.from(_examplePayload)..removeLast(),
       );
@@ -22,10 +18,18 @@ void main() {
         dataWithInsufficientFrameLength.toEddystoneEid(),
         predicate((Either<FormatException, EddystoneEid> e) => e.isLeft()),
       );
+    },
+  );
+  test(
+    'when payload longer than Eddystone-Eid length payload is truncated',
+    () {
+      final dataWithTooLargeFrameLength = Uint8List.fromList(
+        List.from(_examplePayload)..add(0)..add(0),
+      );
 
       expect(
-        dataWithTooLargeFrameLength.toEddystoneEid(),
-        predicate((Either<FormatException, EddystoneEid> e) => e.isLeft()),
+        dataWithTooLargeFrameLength.toEddystoneEid().map((r) => r.eid),
+        right('1000000000000000'),
       );
     },
   );
