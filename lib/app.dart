@@ -37,6 +37,7 @@ class App extends StatelessWidget {
         child: MaterialApp(
           title: 'Eddystone Beacon Scanner',
           theme: ThemeData(
+            fontFamily: 'MozartNbp',
             brightness: Brightness.dark,
             primarySwatch: Colors.red,
             accentColor: Colors.white,
