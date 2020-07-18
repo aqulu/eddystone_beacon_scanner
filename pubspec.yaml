@@ -80,6 +80,9 @@ flutter:
     - family: MozartNbp
       fonts:
         - asset: assets/fonts/MozartNbp.ttf
+    - family: PixelIcons
+      fonts:
+        - asset: assets/fonts/PixelIcons.ttf
 
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

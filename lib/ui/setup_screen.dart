@@ -4,6 +4,7 @@ import 'package:app_settings/app_settings.dart';
 import 'package:dartz/dartz.dart' show Either;
 import 'package:eddystone_beacon_scanner/domain/device_state.dart';
 import 'package:eddystone_beacon_scanner/domain/scan_result.dart';
+import 'package:eddystone_beacon_scanner/ui/pixel_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
@@ -38,7 +39,7 @@ class _Setup extends StatelessWidget {
             children: [
               if (deviceState.bluetoothState == BluetoothState.off)
                 RaisedButton.icon(
-                  icon: Icon(Icons.bluetooth_disabled),
+                  icon: Icon(PixelIcons.bluetooth_disabled),
                   label: Text('Please turn Bluetooth on'),
                   onPressed: AppSettings.openBluetoothSettings,
                 ),
@@ -49,7 +50,7 @@ class _Setup extends StatelessWidget {
                   'nearby BLE devices',
                 ),
                 RaisedButton.icon(
-                  icon: Icon(Icons.settings_bluetooth),
+                  icon: Icon(PixelIcons.bluetooth_settings),
                   label: Text('Open app settings'),
                   onPressed: AppSettings.openBluetoothSettings,
                 ),
@@ -62,7 +63,7 @@ class _Setup extends StatelessWidget {
                   'BLE scanning requires location service permissions',
                 ),
                 RaisedButton.icon(
-                  icon: Icon(Icons.not_listed_location),
+                  icon: Icon(PixelIcons.location_unknown),
                   label: Text('Grant permissions'),
                   onPressed: (!Platform.isIOS)
                       ? Permission.locationWhenInUse.request
@@ -76,7 +77,7 @@ class _Setup extends StatelessWidget {
                   'BLE scanning requires location service permissions',
                 ),
                 RaisedButton.icon(
-                  icon: Icon(Icons.not_listed_location),
+                  icon: Icon(PixelIcons.location_unknown),
                   label: Text('Open app settings'),
                   onPressed: AppSettings.openAppSettings,
                 ),
@@ -84,7 +85,7 @@ class _Setup extends StatelessWidget {
               if (deviceState.locationServicesState ==
                   LocationServicesState.off)
                 RaisedButton.icon(
-                  icon: Icon(Icons.location_off),
+                  icon: Icon(PixelIcons.location_off),
                   label: Text('Please turn location services on'),
                   onPressed: AppSettings.openLocationSettings,
                 ),
