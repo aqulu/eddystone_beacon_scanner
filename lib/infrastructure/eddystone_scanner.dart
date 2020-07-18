@@ -31,7 +31,8 @@ class EddystoneScanner {
 extension _AdvertisementDataPayload on AdvertisementData {
   /// returns the serviceData that matches the first
   /// [AdvertisementData.serviceUuids] entry, or null if not applicable
-  Uint8List get payload => (serviceUuids != null && serviceUuids.isNotEmpty)
-      ? serviceData[serviceUuids.first]
-      : null;
+  Uint8List get payload =>
+      (serviceData != null && serviceUuids != null && serviceUuids.isNotEmpty)
+          ? serviceData[serviceUuids.first]
+          : null;
 }
