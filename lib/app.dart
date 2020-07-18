@@ -39,7 +39,7 @@ class App extends StatelessWidget {
           theme: ThemeData(
             fontFamily: 'MozartNbp',
             brightness: Brightness.dark,
-            primarySwatch: Colors.red,
+            primarySwatch: Colors.grey,
             accentColor: Colors.white,
             visualDensity: VisualDensity.adaptivePlatformDensity,
             buttonTheme: ButtonThemeData(
