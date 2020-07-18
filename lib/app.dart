@@ -43,10 +43,16 @@ class App extends StatelessWidget {
             accentColor: Colors.white,
             visualDensity: VisualDensity.adaptivePlatformDensity,
             buttonTheme: ButtonThemeData(
-              shape: const PixelBorder(borderRadius: 10, granularity: 5),
+              shape: PixelBorder(
+                borderRadius: BorderRadius.circular(10),
+                pixelSize: 5,
+              ),
             ),
             cardTheme: CardTheme(
-              shape: const PixelBorder(borderRadius: 15, granularity: 5),
+              shape: PixelBorder(
+                borderRadius: BorderRadius.circular(15),
+                pixelSize: 5,
+              ),
             ),
           ),
           home: _ScreenSwitcher(),
