@@ -109,6 +109,12 @@ void main() {
           )),
           predicate(
             (Either<dynamic, List<ScanResult>> actual) => listEquals(
+              [],
+              actual.getOrElse(() => null),
+            ),
+          ),
+          predicate(
+            (Either<dynamic, List<ScanResult>> actual) => listEquals(
               _scanResults.getRange(0, 1).toList(),
               actual.getOrElse(() => null),
             ),
@@ -151,6 +157,12 @@ void main() {
           scanner,
         ),
         emitsInOrder([
+          predicate(
+            (Either<dynamic, List<ScanResult>> actual) => listEquals(
+              [],
+              actual.getOrElse(() => null),
+            ),
+          ),
           predicate(
             (Either<dynamic, List<ScanResult>> actual) => listEquals(
               _scanResults.getRange(0, 1).toList(),

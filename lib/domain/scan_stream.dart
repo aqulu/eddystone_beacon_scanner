@@ -42,7 +42,7 @@ class ScanStream extends StreamView<Either<DeviceState, List<ScanResult>>> {
                         Duration(seconds: 10),
                         shouldPreventDuplicates: true,
                       )
-                      .map(right),
+                      .startWith([]).map(right),
             );
     return ScanStream._(scanStream);
   }
