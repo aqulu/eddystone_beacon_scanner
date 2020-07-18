@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart' show Either;
 import 'package:eddystone_beacon_scanner/domain/device_state.dart';
 import 'package:eddystone_beacon_scanner/domain/scan_result.dart';
+import 'package:eddystone_beacon_scanner/ui/widgets/scan_indicator.dart';
 import 'package:eddystone_beacon_scanner/ui/widgets/scan_result_card.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +17,15 @@ class ScanScreen extends StatelessWidget {
             updateShouldNotify: (previous, current) {
               return !listEquals(previous, current);
             },
-            child: _ScanResults(),
+            child: Stack(
+              children: [
+                _ScanResults(),
+                Align(
+                  alignment: Alignment.bottomLeft,
+                  child: ScanIndicator(size: 150, color: Colors.white),
+                ),
+              ],
+            ),
           ),
         ),
       );
