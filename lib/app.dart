@@ -42,11 +42,11 @@ class App extends StatelessWidget {
             primarySwatch: Colors.red,
             accentColor: Colors.white,
             visualDensity: VisualDensity.adaptivePlatformDensity,
+            buttonTheme: ButtonThemeData(
+              shape: const PixelBorder(borderRadius: 10, granularity: 5),
+            ),
             cardTheme: CardTheme(
-              shape: PixelBorder(
-                borderRadius: 15,
-                granularity: 5,
-              ),
+              shape: const PixelBorder(borderRadius: 15, granularity: 5),
             ),
           ),
           home: _ScreenSwitcher(),
