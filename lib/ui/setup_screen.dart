@@ -37,7 +37,7 @@ class _Setup extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               if (deviceState.bluetoothState == BluetoothState.off)
-                FlatButton.icon(
+                RaisedButton.icon(
                   icon: Icon(Icons.bluetooth_disabled),
                   label: Text('Please turn Bluetooth on'),
                   onPressed: AppSettings.openBluetoothSettings,
@@ -48,7 +48,7 @@ class _Setup extends StatelessWidget {
                   'This app requires Bluetooth permissions to scan for '
                   'nearby BLE devices',
                 ),
-                FlatButton.icon(
+                RaisedButton.icon(
                   icon: Icon(Icons.settings_bluetooth),
                   label: Text('Open app settings'),
                   onPressed: AppSettings.openBluetoothSettings,
@@ -61,7 +61,7 @@ class _Setup extends StatelessWidget {
                 Text(
                   'BLE scanning requires location service permissions',
                 ),
-                FlatButton.icon(
+                RaisedButton.icon(
                   icon: Icon(Icons.not_listed_location),
                   label: Text('Grant permissions'),
                   onPressed: (!Platform.isIOS)
@@ -75,7 +75,7 @@ class _Setup extends StatelessWidget {
                 Text(
                   'BLE scanning requires location service permissions',
                 ),
-                FlatButton.icon(
+                RaisedButton.icon(
                   icon: Icon(Icons.not_listed_location),
                   label: Text('Open app settings'),
                   onPressed: AppSettings.openAppSettings,
@@ -83,7 +83,7 @@ class _Setup extends StatelessWidget {
               ],
               if (deviceState.locationServicesState ==
                   LocationServicesState.off)
-                FlatButton.icon(
+                RaisedButton.icon(
                   icon: Icon(Icons.location_off),
                   label: Text('Please turn location services on'),
                   onPressed: AppSettings.openLocationSettings,
