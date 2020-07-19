@@ -8,9 +8,9 @@ import 'package:eddystone_beacon_scanner/infrastructure/location_services_state_
 import 'package:eddystone_beacon_scanner/ui/loading_screen.dart';
 import 'package:eddystone_beacon_scanner/ui/scan_screen.dart';
 import 'package:eddystone_beacon_scanner/ui/setup_screen.dart';
-import 'package:eddystone_beacon_scanner/ui/widgets/pixel_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ble_lib/flutter_ble_lib.dart' show BleManager;
+import 'package:pixel_border/pixel_border.dart';
 import 'package:provider/provider.dart';
 
 class App extends StatelessWidget {

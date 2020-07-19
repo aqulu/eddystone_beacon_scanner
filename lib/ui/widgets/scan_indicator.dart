@@ -1,6 +1,6 @@
 import 'package:eddystone_beacon_scanner/ui/pixel_icons.dart';
-import 'package:eddystone_beacon_scanner/ui/widgets/pixel_border.dart';
 import 'package:flutter/widgets.dart';
+import 'package:pixel_border/pixel_border.dart';
 
 ///
 /// A visual indicator suggesting beacon scan is currently in progress
