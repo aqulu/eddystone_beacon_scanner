@@ -7,6 +7,7 @@ jobs:
     name: build on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest]
     steps:
@@ -18,7 +19,13 @@ jobs:
       - run: flutter pub get
       - name: android build
         if: ${{ matrix.os == 'ubuntu-latest' }}
-        run: flutter build apk --debug
+
+        # sdkmanager not present in github actions, results in following error:
+        # "No version of NDK matched the requested version 21.0.6113669. Versions available locally: 21.3.6528147"
+        # TODO remove workaround when https://github.com/flutter/flutter/issues/53657 resolved
+        run: |
+          sed -i '30i\ \ \ \ ndkVersion "21.3.6528147"' android/app/build.gradle
+          flutter build apk --debug
       - name: ios build
         if: ${{ matrix.os == 'macos-latest' }}
         run: flutter build ios --debug --no-codesign
