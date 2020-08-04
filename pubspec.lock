@@ -7,7 +7,7 @@ packages:
       name: app_settings
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.1+1"
+    version: "4.0.2"
   archive:
     dependency: transitive
     description:
@@ -89,7 +89,7 @@ packages:
       name: flutter_ble_lib
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.2.5"
+    version: "2.2.9"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -164,7 +164,7 @@ packages:
       name: pixel_border
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.1"
+    version: "1.0.0"
   plugin_platform_interface:
     dependency: transitive
     description:
